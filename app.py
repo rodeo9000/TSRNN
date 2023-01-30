@@ -1,16 +1,16 @@
-import numpy
 import os
+import numpy
 import tkinter as tk
-from tkinter import filedialog
 from tkinter import *
+from tkinter import filedialog
 from PIL import ImageTk, Image
 from keras.models import load_model
 
 #Loading the model
 model = load_model('/home/rodean/Coding/traffic/model/CNN.h5')
 
-# All Traffic Signs classes Names
-classes = { 1:'Speed limit (20km/h)',
+#Type Names
+Types = { 1:'Speed limit (20km/h)',
             2:'Speed limit (30km/h)',      
             3:'Speed limit (50km/h)',       
             4:'Speed limit (60km/h)',      
@@ -55,56 +55,63 @@ classes = { 1:'Speed limit (20km/h)',
            43:'End no passing veh > 3.5 tons' }
                           
 
-def Upload_Image():
+def Upload():
     try:
-        file_path = filedialog.askopenfilename()
-        uploaded = Image.open(file_path)
-        uploaded = uploaded.resize((160, 160))
-        im=ImageTk.PhotoImage(uploaded)
-        
-        sign_image.configure(image=im)
-        sign_image.image=im
-        label.configure(text='')
-        show_classify_button(file_path)
+        path = filedialog.askopenfilename()
+        chosen = Image.open(path)
+        chosen = chosen.resize((160, 160))
+        image = ImageTk.PhotoImage(chosen)
+        display_image.configure(image = image)
+        display_image.image = image
+        name.configure(text = '')
+
+        Visible(path)
+        new_button()
+
     except:
         print ("Failed to Upload Image")
         pass
 
-def show_classify_button(file_path):
-    classify_b = Button(top,text="Recognise Image",command=lambda: classify(file_path),padx=10,pady=5)
-    classify_b.configure(background='black', foreground='white',font=('arial',10,'bold'))
-    classify_b.place(relx=0.70,rely=0.45)
+def new_button():
+    newButton = Button(main, text = 'hello', padx = 10, pady = 5)
+    newButton.configure(background='red', foreground='white',font=('arial',16,'bold'))
+    newButton.place(relx=0.70,rely=0.54)
 
-def classify(file_path):
+def Visible(path):
+    classify = Button(main, text = "Classify Image", command = lambda: Classify(path), padx = 10, pady = 5)
+    classify.configure(background = 'blue', foreground = 'white', font = ('arial', 16, 'bold'))
+    classify.place(relx = 0.12, rely = 0.54)
+
+def Classify(path):
     global label_packed
-    image = Image.open(file_path)
+    image = Image.open(path)
     image = image.resize((40,40))
-    image = numpy.expand_dims(image, axis=0)
+    image = numpy.expand_dims(image, axis = 0)
     image = numpy.array(image)
-    pred = model.predict([image])[0]
-    pred = numpy.argmax(pred, axis=0)
-    sign = classes[pred+1]
-    label.configure(background = '#507af8', foreground='black', text = sign) 
+    prediction = model.predict([image])[0]
+    prediction = numpy.argmax(prediction, axis=0)
+    type = Types[prediction+1]
+    name.configure(background = '#507af8', foreground='maroon', text = type, font = ('comic sans', 25, 'bold')) 
     
    
-
-
 #Tkinter application
-top = tk.Tk()
-top.geometry('800x600')
-top.title('Traffic Sign Recognition AI')
-top.configure(background='#507af8')
+main = tk.Tk()
+main.geometry('800x600')
+main.title('Traffic Sign Recognition AI')
+main.configure(background = '#507af8')
 
-label = Label(top, background='black', font=('comic sans', 25,'bold'))
-sign_image = Label(top)
+name = Label(main, background = 'black', font = ('comic sans', 25,'bold'))
+display_image = Label(main)
 
-upload = Button(top, text = "Upload Image", command = Upload_Image , padx = 10, pady = 5)
-upload.configure(background = 'black', foreground = 'white', font = ('comic sans', 18,'bold'))
+upload = Button(main, text = "Upload Image", command = Upload , padx = 10, pady = 5)
+upload.configure(background = 'black', foreground = 'white', font = ('comic sans', 16,'bold'))
 
-upload.pack(side=BOTTOM,pady=50)
-sign_image.pack(side=BOTTOM,expand=True)
-label.pack(side=BOTTOM,expand=True)
-heading = Label(top, text="AI Traffic Sign Classifier", pady=20, font=('comic sans', 24,'bold'))
-heading.configure(background='#507af8',foreground='black')
-heading.pack()
-top.mainloop()
+upload.pack(side = BOTTOM, pady = 50)
+display_image.pack(side = BOTTOM, expand = True)
+name.pack(side = BOTTOM, expand = True)
+title = Label(main, text = '''AI Traffic Sign Classifier
+------------------------------------------------------------------------------''', pady = 20, font = ('comic sans', 24,'bold'))
+
+title.configure(background = '#507af8', foreground = 'black')
+title.pack()
+main.mainloop()
