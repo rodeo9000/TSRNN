@@ -1,4 +1,4 @@
-This is the traffic sign classification AI 
+This is the traffic sign classification AI. /n
 TSRNN.ipynb is the file with the convolutional neural network code
 CNN.h5 is the trained model
 app.py is the tkinter desktop application code
