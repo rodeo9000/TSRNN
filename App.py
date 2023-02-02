@@ -1,5 +1,6 @@
 import os
 import numpy
+import webbrowser
 import tkinter as tk
 from tkinter import *
 from tkinter import filedialog
@@ -72,10 +73,12 @@ def Upload():
         print ("Failed to Upload Image")
         pass
 
-def new_button():
-    newButton = Button(main, text = 'hello', padx = 10, pady = 5)
-    newButton.configure(background='red', foreground='white',font=('arial',16,'bold'))
-    newButton.place(relx=0.70,rely=0.54)
+def Source():
+    source = Button(main, text = 'Source Code', padx = 10, pady = 5)
+    source.configure(background = 'red', foreground = 'white', font = ('arial', 16, 'bold'))
+    source.place(relx = 0.70, rely = 0.54)
+    lintext = 'https://github.com/rodeo9000/Traffic-Sign-AI'
+    link.configure(background = '#507af8', foreground = 'dark blue', text = linktext, font = ('comic sans', 18, 'bold'))
 
 def Visible(path):
     classify = Button(main, text = "Classify Image", command = lambda: Classify(path), padx = 10, pady = 5)
@@ -89,9 +92,9 @@ def Classify(path):
     image = numpy.expand_dims(image, axis = 0)
     image = numpy.array(image)
     prediction = model.predict([image])[0]
-    prediction = numpy.argmax(prediction, axis=0)
-    type = Types[prediction+1]
-    name.configure(background = '#507af8', foreground='maroon', text = type, font = ('comic sans', 25, 'bold')) 
+    prediction = numpy.argmax(prediction, axis = 0)
+    type = Types[prediction + 1]
+    name.configure(background = '#507af8', foreground = 'maroon', text = type, font = ('comic sans', 25, 'bold')) 
     
    
 #Tkinter application
