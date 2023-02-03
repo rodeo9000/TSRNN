@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import filedialog
 from PIL import ImageTk, Image
 from keras.models import load_model
+from sklearn.metrics import accuracy_score
 
 #Loading the model
 model = load_model('/home/rodean/Coding/traffic/model/CNN.h5')
@@ -67,18 +68,19 @@ def Upload():
         name.configure(text = '')
 
         Visible(path)
-        new_button()
+        Source()
 
     except:
         print ("Failed to Upload Image")
         pass
 
 def Source():
-    source = Button(main, text = 'Source Code', padx = 10, pady = 5)
+    source = Button(main, text = 'Source Code', command = lambda: openLink(), padx = 10, pady = 5)
     source.configure(background = 'red', foreground = 'white', font = ('arial', 16, 'bold'))
     source.place(relx = 0.70, rely = 0.54)
-    lintext = 'https://github.com/rodeo9000/Traffic-Sign-AI'
-    link.configure(background = '#507af8', foreground = 'dark blue', text = linktext, font = ('comic sans', 18, 'bold'))
+
+def openLink():
+    webbrowser.open('https://github.com/rodeo9000/Traffic-Sign-AI')
 
 def Visible(path):
     classify = Button(main, text = "Classify Image", command = lambda: Classify(path), padx = 10, pady = 5)
@@ -93,7 +95,7 @@ def Classify(path):
     image = numpy.array(image)
     prediction = model.predict([image])[0]
     prediction = numpy.argmax(prediction, axis = 0)
-    type = Types[prediction + 1]
+    type = Types[prediction+1]
     name.configure(background = '#507af8', foreground = 'maroon', text = type, font = ('comic sans', 25, 'bold')) 
     
    
